@@ -107,7 +107,7 @@ app.use(cors());
 
 // USER ENDPOINTS
 app.get('/', (req, res)=> {
-    res.statusCode(200);
+    res.sendStatus(200);
 })
 app.get('/user/log/:username', (req, res)=>{
     const user = req.params['username'];
