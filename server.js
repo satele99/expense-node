@@ -5,12 +5,13 @@ const app = express();
 const server = http.createServer(app)
 const { Sequelize, DataTypes } = require('sequelize')
 const port = 4000
-const sequelizeConnection = new Sequelize('postgres://amirhali:satele@localhost:5000/amirhali', {
+const sequelizeConnection = new Sequelize('postgres://amirhali:c09VwNBjfbij2m3nugIRQbxL6e78HHhe@dpg-chue4v7dvk4olip1130g-a/postgres99', {
     define:{
         schema: 'dc_react_expense'
     }
 });
-
+sequelizeConnection.createSchema('dc_react_expense')
+//'postgres://amirhali:satele@localhost:5000/amirhali'
 const User = sequelizeConnection.define('users', {
     username:{
         type: DataTypes.STRING,
@@ -98,12 +99,16 @@ app.use((req, res, next) => {
     next();
 });
 
-app.listen(port, '127.0.0.1', ()=>{
+app.listen(port, '0.0.0.0', (err)=>{
+    if(err) throw err
     console.log(`server running on ${port}`);
 });
 app.use(cors());
 
 // USER ENDPOINTS
+app.get('/', (req, res)=> {
+    res.statusCode(200);
+})
 app.get('/user/log/:username', (req, res)=>{
     const user = req.params['username'];
     console.log(user)
@@ -250,7 +255,7 @@ app.delete('/remove-expense/:uuid', (req, res) => {
     const uuid = req.params['uuid']
 
     Expenses.destroy({where: {uuid: uuid}}).then(()=> {
-        res.status(200).send('Success.')
+        res.status(200).send('Success.');
     }).catch((error)=> {
         res.status(404).send('Not Found');
     })
